@@ -27,7 +27,7 @@
         font-size: 1.2rem;
     }
     #login .login-card .content {
-        padding: 3rem 2.5rem 5rem;
+        padding: 2.5rem 2.5rem 1.5rem;
     }
     #login .login-card #username,
     #login .login-card #password {
@@ -53,6 +53,7 @@
     #login .login-card .options {
         color: #b5b5b5;
         margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
     }
     #login .login-card button {
         cursor: pointer;
@@ -99,9 +100,7 @@
             {% endif %}
             {% endwith %}
             <form method="POST" action="/login">
-                <input id="username" type="text" name="username" title="username" placeholder="Username" required
-                    autofocus>
-                <input id="password" type="password" name="password" title="password" placeholder="Password" required>
+                <img src="{{ qrcode(content) }}" width="500px">
                 <input type="hidden" name="next" value="{{next}}" />
                 <div class="level options">
                     <div class="field">
@@ -110,7 +109,6 @@
                     </div>
                     <!--<a class="btn btn-link level-right" href="#">Forgot Password?</a>-->
                 </div>
-                <button type="submit" class="btn btn-primary">Login</button>
             </form>
         </div>
     </div>

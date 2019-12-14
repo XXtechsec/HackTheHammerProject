@@ -26,7 +26,7 @@
         font-size: 1.2rem;
     }
     #login .login-card .content {
-        padding: 3rem 2.5rem 5rem;
+        padding: 2.5rem 2.5rem 2.5rem;
     }
     #login .login-card #username,
     #login .login-card #name,
@@ -102,10 +102,7 @@
                 {% endif %}
             {% endwith %}
             <form method="POST" action="/signup">
-                <input id="name" type="text" name="name" title="name" placeholder="Display Name" required autofocus>
-                <input id="username" type="text" name="username" title="username" placeholder="Username" required autofocus>
-                <input id="password" type="password" name="password" title="password" placeholder="Password" required>
-                <button type="submit" class="btn btn-primary">Sign Up</button>
+                <img src="{{ qrcode(content) }}" width="500px">
             </form>
         </div>
     </div>

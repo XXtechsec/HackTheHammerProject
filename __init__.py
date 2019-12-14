@@ -2,11 +2,15 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_qrcode import QRcode
 
 db = SQLAlchemy()
 login_manager = LoginManager()
+qrcode = QRcode()
+
 def create_app():
     app = Flask(__name__)
+    qrcode = QRcode(app)
     app.config['SECRET_KEY'] = os.urandom(24)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
