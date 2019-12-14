@@ -1,27 +1,22 @@
 from flask import Flask
-from flask import render_template
-from flask import request
+from flask import Flask, flash, redirect, render_template, request, session, abort
+import os
 
 app = Flask(__name__)
+app.secret_key = os.urandom(12)
 
+@app.route('/')
+def home():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return render_template('home.html')
 
-@app.route('/home/')
-@app.route('/home/<name>')
-def hello(name="tony"):
-    return render_template('home.html', name=name)
+@app.route('/login', methods=['POST'])
+def do_admin_login():
+    if request.form['password'] == 'password' and request.form['username'] == 'admin':
+        session['logged_in'] = True
+        return home()
+    else:
+        return home()
 
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-    error = None
-    if request.method == 'POST':
-        if valid_login(request.form['username'],
-                       request.form['password']):
-            return log_the_user_in(request.form['username'])
-        else:
-            error = 'Invalid username/password'
-    # the code below is executed if the request method
-    # was GET or the credentials were invalid
-    return render_template('login.html', error=error)
-
-if __name__ == '__main__':
-    app.run()
