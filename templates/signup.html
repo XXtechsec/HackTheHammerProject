@@ -4,7 +4,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <style>
     @charset "UTF-8";
     #login {
@@ -30,6 +29,7 @@
         padding: 3rem 2.5rem 5rem;
     }
     #login .login-card #username,
+    #login .login-card #name,
     #login .login-card #password {
         display: block;
         width: 100%;
@@ -41,11 +41,14 @@
         transition: all 0.5s;
     }
     #login .login-card #username:hover,
+    #login .login-card #name:hover,
     #login .login-card #password:hover {
         border-color: #7a7a7a;
     }
     #login .login-card #username:active,
     #login .login-card #username:focus,
+    #login .login-card #name:active,
+    #login .login-card #name:focus,
     #login .login-card #password:active,
     #login .login-card #password:focus {
         border-color: #00d1b2;
@@ -88,29 +91,21 @@
 <div id="login">
     <div class="login-card">
         <div class="card-title">
-            <h1>Please Log In</h1>
+            <h1>Please Sign Up</h1>
         </div>
         <div class="content">
             {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <div class="notification is-danger">
-                {{ messages[0] }}
-            </div>
-            {% endif %}
-            {% endwith %}
-            <form method="POST" action="/login">
-                <input id="username" type="text" name="username" title="username" placeholder="Username" required
-                    autofocus>
-                <input id="password" type="password" name="password" title="password" placeholder="Password" required>
-                <input type="hidden" name="next" value="{{next}}" />
-                <div class="level options">
-                    <div class="field">
-                        <input class="is-checkradio" id="exampleCheckbox" type="checkbox" name="remember" checked="checked">
-                        <label for="exampleCheckbox">Remember me</label>
+                {% if messages %}
+                    <div class="notification is-danger">
+                        {{ messages[0] }}. Go to <a href="{{ url_for('auth.login') }}">login page</a>.
                     </div>
-                    <!--<a class="btn btn-link level-right" href="#">Forgot Password?</a>-->
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
+                {% endif %}
+            {% endwith %}
+            <form method="POST" action="/signup">
+                <input id="name" type="text" name="name" title="name" placeholder="Display Name" required autofocus>
+                <input id="username" type="text" name="username" title="username" placeholder="Username" required autofocus>
+                <input id="password" type="password" name="password" title="password" placeholder="Password" required>
+                <button type="submit" class="btn btn-primary">Sign Up</button>
             </form>
         </div>
     </div>
