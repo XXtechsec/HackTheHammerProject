@@ -10,6 +10,7 @@ qrcode = QRcode()
 
 def create_app():
     app = Flask(__name__)
+
     qrcode = QRcode(app)
     app.config['SECRET_KEY'] = os.urandom(24)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite'

@@ -56,21 +56,7 @@
         margin-top: 1.5rem;
     }
     #login .login-card button {
-        cursor: pointer;
-        font-size: 1.2rem;
-        color: #00d1b2;
-        border-radius: 4rem;
-        display: block;
         width: 100%;
-        background: transparent;
-        border: 2px solid #00d1b2;
-        padding: 0.9rem 0 1.1rem;
-        transition: color 0.5s, border-color 0.5s;
-    }
-    #login .login-card button:hover,
-    #login .login-card button:focus {
-        color: #009e86;
-        border-color: #009e86;
     }
     #login .login-card button:active {
         transform: translateY(1px);
@@ -84,6 +70,10 @@
     button:focus {
         outline: none;
     }
+
+    .hero-body {
+        padding-top: 0px;
+    }
 </style>
 
 <div id="login">
@@ -92,15 +82,8 @@
             <h1>Please Log In</h1>
         </div>
         <div class="content">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <div class="notification is-danger">
-                {{ messages[0] }}
-            </div>
-            {% endif %}
-            {% endwith %}
             <form method="POST" action="/login">
-                <img src="{{ qrcode(content) }}" width="500px">
+                <input id="username" type="text" name="username" title="username" placeholder="Username" required autofocus>
                 <input type="hidden" name="next" value="{{next}}" />
                 <div class="level options">
                     <div class="field">
@@ -109,6 +92,7 @@
                     </div>
                     <!--<a class="btn btn-link level-right" href="#">Forgot Password?</a>-->
                 </div>
+                <button type="submit" class="button is-outlined is-primary">Next</button>
             </form>
         </div>
     </div>

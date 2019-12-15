@@ -29,5 +29,7 @@ def verify_signature(message, sig, pk):
     try:
         verifier.verify(h, sig)
         print("Valid!")
+        return True
     except ValueError:
         print("Invalid!")
+        return False

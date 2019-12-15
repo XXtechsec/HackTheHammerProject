@@ -56,21 +56,7 @@
         margin-top: 1.5rem;
     }
     #login .login-card button {
-        cursor: pointer;
-        font-size: 1.2rem;
-        color: #00d1b2;
-        border-radius: 4rem;
-        display: block;
         width: 100%;
-        background: transparent;
-        border: 2px solid #00d1b2;
-        padding: 0.9rem 0 1.1rem;
-        transition: color 0.5s, border-color 0.5s;
-    }
-    #login .login-card button:hover,
-    #login .login-card button:focus {
-        color: #009e86;
-        border-color: #009e86;
     }
     #login .login-card button:active {
         transform: translateY(1px);
@@ -103,19 +89,14 @@
             </div>
             {% endif %}
             {% endwith %}
-            <form method="POST" action="/login">
-                <input id="username" type="text" name="username" title="username" placeholder="Username" required autofocus>
-                <img src="{{ qrcode(content) }}" width="500px">
+            <form method="POST" action="/login/next">
+                <img src="{{ qrcode(content) }}" width="500px" style="margin-bottom: 1.5em;">
                 <input type="hidden" name="next" value="{{next}}" />
-                <input type="hidden" name="id" value="{{id}}" />
-                <div class="level options">
-                    <div class="field">
-                        <input class="is-checkradio" id="exampleCheckbox" type="checkbox" name="remember" checked="checked">
-                        <label for="exampleCheckbox">Remember me</label>
-                    </div>
-                    <!--<a class="btn btn-link level-right" href="#">Forgot Password?</a>-->
+                <input type="hidden" name="remember" value="{{remember}}" />
+                <div class="field is-grouped">
+                    <button type="button" class="button is-outlined is-text"><a href="/login">Back</a></button>
+                    <button type="submit" class="button is-outlined is-primary">Login</button>
                 </div>
-                <button type="submit" class="btn btn-primary">Login</button>
             </form>
         </div>
     </div>
