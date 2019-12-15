@@ -7,6 +7,7 @@ import ast
 main = Blueprint('main', __name__)
 L = "google.com, anthony, password|facebook.com, bob, qoojadkm|"
 @main.route('/vault')
+@login_required
 def handle_needs_login():
     global L
     print(L, flush=True)
