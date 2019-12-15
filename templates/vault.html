@@ -3,30 +3,16 @@
 
 {% extends "base.html" %}
 {% block content %}
+    {% for x in log %}
+        {% set y = x[1]|length %}
 <ul class="list-group">
-  <button class="button" type="button" data-target="google">
-    www.google.com
+  <button class="button" type="button" data-target="#{{ y }}" aria-expanded="false" data-toggle="collapse" aria-label="Toggle navigation">
+    {{ x[0] }}
   </button>
-  <div class="collapse" id="google">
-      <div>Username: Anthony</div>
-      <div>Password: IFA^NP{}!</div>
+  <div class="collapse" id="{{ y }}">
+      <div>Username: {{ x[1] }}</div>
+      <div>Password: {{ x[2] }}</div>
   </div>
 </ul>
-<ul class="list-group">
-  <button class="button" type="button" data-target="Facebook">
-    www.Facebook.com
-  </button>
-  <div class="collapse" id="Facebook">
-      <div>Username: Kevin</div>
-      <div>Password: fdAI1,"[1</div>
-  </div>
-    <button class="button" type="button" data-target="Instagram">
-    www.Facebook.com
-  </button>
-  <div class="collapse" id="Instagram">
-      <div>Username: Amy</div>
-      <div>Password: kj'!8uj,"[1</div>
-  </div>
-</ul>
-
+{% endfor %}
 {% endblock %}

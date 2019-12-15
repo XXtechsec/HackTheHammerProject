@@ -1,13 +1,22 @@
 from . import db, login_manager
 from flask import Blueprint, render_template, flash, redirect, url_for, request, current_app
 from flask_login import login_required, current_user
-
+from .models import *
 main = Blueprint('main', __name__)
 
-@login_manager.unauthorized_handler
+@main.route('/vault')
 def handle_needs_login():
-    flash("You have to be logged in to access this page.")
-    return render_template('index.html')
+    print(User.Logins)
+    #current_user.Logins += "google.com, anthony, password"
+    L = "google.com, anthony, password|facebook.com, bob, qoojadkm|"
+    logins = L.split("|")
+    l = []
+    for i in range(0, len(logins)):
+        if(logins[i] == ''):
+            logins.remove(logins[i])
+        else:
+            l.append(logins[i].split(","))
+    return render_template('vault.html', log = l )
 
 @main.route('/')
 def index():
