@@ -4,7 +4,7 @@
 {% extends "base.html" %}
 {% block content %}
     {% for x in log %}
-        {% set y = x[1]|length %}
+        {% set y = x[1]|length*x[2]|length %}
 <ul class="list-group">
   <button class="button" type="button" data-target="#{{ y }}" aria-expanded="false" data-toggle="collapse" aria-label="Toggle navigation">
     {{ x[0] }}
@@ -13,6 +13,26 @@
       <div>Username: {{ x[1] }}</div>
       <div>Password: {{ x[2] }}</div>
   </div>
+<form action="{{ url_for('main.delete') }}" method="post">
+    <button id=deletebtn class="btn btn-danger btn-xs" type="submit" value="{{ x }}" name="delete">
+        {{ x }} delete
+    </button>
+</form>
 </ul>
 {% endfor %}
+
+    New Login
+ <form action="{{ url_for('main.new') }}" method="post" id="saveForm">
+          {# gets Quote info #}
+            <h1>Username:
+              <input maxlength="25" name='saveName'>
+            </h1>
+            <h6>Password:
+              <input maxlength="25" name='savePassword'>
+            </h6>
+            <p>Website:
+              <input maxlength="25" name='saveWebsite'>
+            </p>
+        <input type="submit">
+        </form>
 {% endblock %}
