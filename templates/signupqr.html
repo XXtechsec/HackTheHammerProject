@@ -87,9 +87,12 @@
                     </div>
                 {% endif %}
             {% endwith %}
-            <form method="POST" action="/signup">
+            <form method="POST" action="/signup/next">
                 <img src="{{ qrcode(content) }}" width="500px" style="margin-bottom: 1.5em">
-                <button type="submit" class="button is-outlined is-primary">Signup</button>
+                <div class="field is-grouped">
+                    <button type="button" class="button is-outlined is-text"><a href="/signup">Back</a></button>
+                    <button type="submit" class="button is-outlined is-primary">Sign up</button>
+                </div>
             </form>
         </div>
     </div>

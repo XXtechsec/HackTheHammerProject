@@ -12,8 +12,8 @@ from expiringdict import ExpiringDict
 
 auth = Blueprint('auth', __name__)
 
-user_cache = ExpiringDict(max_len=100, max_age_seconds=1000)
-signup_id = ExpiringDict(max_len=100, max_age_seconds=1000)
+user_cache = ExpiringDict(max_len=100, max_age_seconds=120)
+signup_id = ExpiringDict(max_len=100, max_age_seconds=120)
 
 def redirectp_dest(fallback):
     dest = request.form.get('next')
@@ -110,6 +110,10 @@ def signup_post():
     #print(id, " ", request.form.get('username'))
     signup_id[id] = { "usr": request.form.get('username'), "pub": None }
     session["uuid"] = id
+    user = User.query.filter_by(usr=request.form.get('username')).first()
+    if user:
+        flash("User already exists.")
+        return redirect(url_for('auth.signup'))
     return redirect(url_for('auth.signup_next'))
 
 @auth.route('/signup/next')
@@ -129,9 +133,10 @@ def signup_next_post():
     username = signup_id[id]["usr"]
     user = User.query.filter_by(usr=username).first()
     if user:
-        flash("User already exists.")
+        return redirect(url_for('auth.login'))
+    else:
+        flash("Signup failed :(")
         return redirect(url_for('auth.signup_next'))
-    return redirect(url_for('auth.login'))
 
 @auth.route('/signup/next/put', methods=['POST'])
 def signup_next_put():
