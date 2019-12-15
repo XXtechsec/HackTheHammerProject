@@ -1,0 +1,32 @@
+{% set theme = 'is-light' %}
+{% set containertags = 'has-text-centered' %}
+
+{% extends "base.html" %}
+{% block content %}
+<ul class="list-group">
+  <button class="button" type="button" data-target="google">
+    www.google.com
+  </button>
+  <div class="collapse" id="google">
+      <div>Username: Anthony</div>
+      <div>Password: IFA^NP{}!</div>
+  </div>
+</ul>
+<ul class="list-group">
+  <button class="button" type="button" data-target="Facebook">
+    www.Facebook.com
+  </button>
+  <div class="collapse" id="Facebook">
+      <div>Username: Kevin</div>
+      <div>Password: fdAI1,"[1</div>
+  </div>
+    <button class="button" type="button" data-target="Instagram">
+    www.Facebook.com
+  </button>
+  <div class="collapse" id="Instagram">
+      <div>Username: Amy</div>
+      <div>Password: kj'!8uj,"[1</div>
+  </div>
+</ul>
+
+{% endblock %}
