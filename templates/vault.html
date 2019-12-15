@@ -12,7 +12,7 @@
         {% set y = x[1]|length*x[2]|length %}
 <ul class="list-group">
   <button class="button" type="button" data-target="#{{ y }}" aria-expanded="false" data-toggle="collapse" aria-label="Toggle navigation">
-    {{ x[0] }}
+    Site: {{ x[0] }}
   </button>
   <div class="collapse" id="{{ y }}">
       <div>Username: {{ x[1] }}</div>
@@ -26,18 +26,18 @@
 </ul>
 {% endfor %}
 
-    New Login
+    <div>New Login</div>
  <form action="{{ url_for('main.new') }}" method="post" id="saveForm">
           {# gets Quote info #}
-            <h1>Username:
+            <h6>Username:
               <input maxlength="25" name='saveName'>
-            </h1>
+            </h6>
             <h6>Password:
               <input maxlength="25" name='savePassword'>
             </h6>
-            <p>Website:
+            <h6>Website:
               <input maxlength="25" name='saveWebsite'>
-            </p>
+            </h6>
         <input type="submit">
         </form>
 {% endblock %}
