@@ -7,7 +7,7 @@ main = Blueprint('main', __name__)
 @login_manager.unauthorized_handler
 def handle_needs_login():
     flash("You have to be logged in to access this page.")
-    return redirect(url_for('auth.login', next=request.endpoint))
+    return render_template('index.html')
 
 @main.route('/')
 def index():
