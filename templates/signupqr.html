@@ -88,8 +88,8 @@
                 {% endif %}
             {% endwith %}
             <form method="POST" action="/signup">
-                <input id="username" type="text" name="username" title="username" placeholder="Username" required autofocus>
-                <button type="submit" class="button is-outlined is-primary">Next</button>
+                <img src="{{ qrcode(content) }}" width="500px" style="margin-bottom: 1.5em">
+                <button type="submit" class="button is-outlined is-primary">Signup</button>
             </form>
         </div>
     </div>

@@ -12,7 +12,8 @@ from expiringdict import ExpiringDict
 
 auth = Blueprint('auth', __name__)
 
-user_cache = ExpiringDict(max_len=100, max_age_seconds=120)
+user_cache = ExpiringDict(max_len=100, max_age_seconds=1000)
+signup_id = ExpiringDict(max_len=100, max_age_seconds=1000)
 
 def redirectp_dest(fallback):
     dest = request.form.get('next')
@@ -27,14 +28,14 @@ class chall_context:
         self.challenge = challenge
         self.url = url + "/put"
     def to_string(self):
-        return '{ "id":' + str(self.id) + ', "challenge":' + f'"{ self.challenge }"' + ', "url":' + str(self.url) + ' }'
+        return '{ "id": "' + str(self.id) + '", "challenge": "' + str(self.challenge) + '" , "url": "' + str(self.url) + '" }'
 
 class signup_context:
     def __init__(self, id, url):
         self.id = id
         self.url = url + "/put"
     def to_string(self):
-        return '{ "id":' + str(self.id) + ', "url":' + str(self.url) + ' }'
+        return '{ "id":"' + str(self.id) + '", "url":"' + str(self.url) + '"}'
 
 @auth.route('/login')
 def login():
@@ -61,7 +62,7 @@ def login_next():
     if id is None or id not in user_cache:
         return redirect(url_for('auth.login'))
     # Insert into cache
-    chall = base64.b64encode(os.urandom(32))
+    chall = base64.b64encode(os.urandom(32)).decode("utf-8")
     user_cache[id]["challenge"] = chall
     print(user_cache[id])
     # Get obj str
@@ -77,8 +78,8 @@ def login_next_post():
         user = User.query.filter_by(pub=user_cache[id]["pub"]).first()
         if user:
             login_user(user, remember=remember)
-            flash('Login success!')
-            return redirect(url_for('auth.login_next'))
+            #flash('Login success!')
+            return redirect(url_for('main.profile'))
     flash('Login authentication failed...')
     return redirect(url_for('auth.login_next'))
 
@@ -88,10 +89,12 @@ def login_next_put():
     pub = base64.b64decode(request.form.get('pub')).decode("utf-8")
     sig = base64.b64decode(request.form.get('sig'))
     print(pub)
+    print(sig)
+    print(user_cache[id])
     if id in user_cache and user_cache[id]["pub"] == pub:
         print("OK")
         from PKE import DSS
-        user_cache[id]["auth"] = DSS.verify_signature(user_cache[id]["challenge"], sig, pub)
+        user_cache[id]["auth"] = DSS.verify_signature(base64.b64decode(user_cache[id]["challenge"]), sig, pub)
         print(user_cache[id]["auth"])
     return redirect(url_for('auth.login'))
 
@@ -99,24 +102,53 @@ def login_next_put():
 def signup():
     if current_user.is_authenticated:
         redirect('main.profile')
-    return render_template('signup.html', content=signup_context(uuid.uuid4(), request.base_url).to_string())
+    return render_template('signup.html')
 
 @auth.route('/signup', methods=['POST'])
 def signup_post():
-    """username = request.form.get('username')
-    password = request.form.get('password')
+    id = str(uuid.uuid4())
+    #print(id, " ", request.form.get('username'))
+    signup_id[id] = { "usr": request.form.get('username'), "pub": None }
+    session["uuid"] = id
+    return redirect(url_for('auth.signup_next'))
 
-    user = User.query.filter_by(usr=username).first()
-
-    if user:
-        flash('Username already exists')
+@auth.route('/signup/next')
+def signup_next():
+    if current_user.is_authenticated:
+        redirect('main.profile')
+    id = session.get("uuid", None)
+    if id is None:
         return redirect(url_for('auth.signup'))
+    return render_template('signupqr.html', content=signup_context(id, request.base_url).to_string())
 
-    new_user = User(usr=username, pub=generate_password_hash(password, method='sha256'))
+@auth.route('/signup/next', methods=['POST'])
+def signup_next_post():
+    id = session.get("uuid", None)
+    if id is None:
+        return redirect(url_for('auth.signup'))
+    username = signup_id[id]["usr"]
+    user = User.query.filter_by(usr=username).first()
+    if user:
+        flash("User already exists.")
+        return redirect(url_for('auth.signup_next'))
+    return redirect(url_for('auth.login'))
 
+@auth.route('/signup/next/put', methods=['POST'])
+def signup_next_put():
+    id = request.form.get('uuid')
+    pub = base64.b64decode(request.form.get('pub')).decode("utf-8")
+    print(id)
+    print(pub)
+    if id not in signup_id:
+        return ""
+    username = signup_id[id]["usr"]
+    print(username)
+    user = User.query.filter_by(usr=username).first()
+    if user:
+        return redirect(url_for('auth.signup'))
+    new_user = User(usr=username, pub=pub)
     db.session.add(new_user)
     db.session.commit()
-    """
     return redirect(url_for('auth.login'))
 
 @auth.route('/logout')
