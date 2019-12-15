@@ -2,3 +2,4 @@
 venv/
 pkeenv/
 .DS_STORE
+__pycache__/

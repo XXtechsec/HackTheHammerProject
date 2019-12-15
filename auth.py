@@ -15,6 +15,22 @@ auth = Blueprint('auth', __name__)
 user_cache = ExpiringDict(max_len=100, max_age_seconds=120)
 signup_id = ExpiringDict(max_len=100, max_age_seconds=120)
 
+import os
+from Crypto.Hash import SHA256
+from Crypto.Signature import DSS
+from Crypto.PublicKey import ECC
+def verify_signature(message, sig, pk):
+    h = SHA256.new(message)
+    key = ECC.import_key(pk)
+    verifier = DSS.new(key, 'fips-186-3')
+    try:
+        verifier.verify(h, sig)
+        print("Valid!")
+        return True
+    except ValueError:
+        print("Invalid!")
+        return False
+
 def redirectp_dest(fallback):
     dest = request.form.get('next')
     try:
@@ -93,8 +109,7 @@ def login_next_put():
     print(user_cache[id])
     if id in user_cache and user_cache[id]["pub"] == pub:
         print("OK")
-        from PKE import DSS
-        user_cache[id]["auth"] = DSS.verify_signature(base64.b64decode(user_cache[id]["challenge"]), sig, pub)
+        user_cache[id]["auth"] = verify_signature(base64.b64decode(user_cache[id]["challenge"]), sig, pub)
         print(user_cache[id]["auth"])
     return redirect(url_for('auth.login'))
 
